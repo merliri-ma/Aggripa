@@ -6,76 +6,88 @@
     <title>Planetary Hours Calculator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 </head>
 <body>
-    <h1>Planetary Hours Calculator (Agrippa System)</h1>
+    <div class="container">
+        <h1>Planetary Hours Calculator (Agrippa System)</h1>
 
-    <!-- Dark Mode Toggle -->
-    <button id="themeToggle" aria-label="Toggle Dark Mode">Switch to Dark Mode</button>
+        <!-- Dark Mode Toggle -->
+        <button id="themeToggle" aria-label="Toggle Dark Mode">Switch to Dark Mode</button>
 
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="spinner" style="display:none;"></div>
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="spinner" style="display:none;">Loading...</div>
 
-    <form onsubmit="event.preventDefault(); calculatePlanetaryHours();" aria-labelledby="formTitle">
-        <h2 id="formTitle" style="display: none;">Planetary Hours Form</h2>
+        <form onsubmit="event.preventDefault(); calculatePlanetaryHours();" aria-labelledby="formTitle">
+            <h2 id="formTitle" style="display: none;">Planetary Hours Form</h2>
 
-        <label for="date" id="dateLabel">Date (YYYY-MM-DD)
-            <span class="tooltip" data-tooltip="Select the date for which you want to calculate planetary hours.">
-                ?
-            </span>
-        </label>
-        <input type="text" id="date" required aria-required="true" class="datepicker">
+            <label for="date" id="dateLabel">Date 
+                <span class="tooltip" data-tooltip="Select the date for which you want to calculate planetary hours.">
+                    ?
+                </span>
+            </label>
+            <input type="text" id="date" required aria-required="true" placeholder="YYYY-MM-DD" class="datepicker">
 
-        <label for="sunrise" id="sunriseLabel">Sunrise Time (HH:MM)
-            <span class="tooltip" data-tooltip="Enter the time in 24-hour format (e.g., 06:00 for 6 AM).">
-                ?
-            </span>
-        </label>
-        <input type="time" id="sunrise" required aria-required="true">
+            <label for="sunrise" id="sunriseLabel">Sunrise Time (HH:MM)
+                <span class="tooltip" data-tooltip="Enter the time in 24-hour format (e.g., 06:00 for 6 AM).">
+                    ?
+                </span>
+            </label>
+            <input type="time" id="sunrise" required aria-required="true">
 
-        <label for="sunset" id="sunsetLabel">Sunset Time (HH:MM)
-            <span class="tooltip" data-tooltip="Enter the time in 24-hour format (e.g., 18:00 for 6 PM).">
-                ?
-            </span>
-        </label>
-        <input type="time" id="sunset" required aria-required="true">
+            <label for="sunset" id="sunsetLabel">Sunset Time (HH:MM)
+                <span class="tooltip" data-tooltip="Enter the time in 24-hour format (e.g., 18:00 for 6 PM).">
+                    ?
+                </span>
+            </label>
+            <input type="time" id="sunset" required aria-required="true">
 
-        <label for="timezone" id="timezoneLabel">Timezone</label>
-        <select id="timezone" required aria-required="true">
-            <option value="-12">GMT -12</option>
-            <option value="0">GMT 0</option>
-            <option value="12">GMT +12</option>
-        </select>
+            <label for="timezone" id="timezoneLabel">Timezone</label>
+            <select id="timezone" required aria-required="true">
+                <!-- Add more timezones dynamically -->
+            </select>
 
-        <label for="timePeriod" id="timePeriodLabel">Time Period</label>
-        <select id="timePeriod" required aria-required="true">
-            <option value="day">Day</option>
-            <option value="week">Week</option>
-            <option value="month">Month</option>
-        </select>
+            <label for="timePeriod" id="timePeriodLabel">Time Period</label>
+            <select id="timePeriod" required aria-required="true">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
 
-        <label for="planetNames" id="planetNamesLabel">Display Planet Names</label>
-        <input type="checkbox" id="planetNames" onchange="togglePlanetNames()">
+            <label for="planetNames" id="planetNamesLabel">Display Planet Names</label>
+            <input type="checkbox" id="planetNames" onchange="togglePlanetNames()">
 
-        <button type="submit" aria-label="Calculate planetary hours">Calculate</button>
-        <button type="button" onclick="resetFields()" aria-label="Reset all fields">Reset</button>
-        <button type="button" onclick="autoFillCurrent()" aria-label="Auto-fill current date and time">Auto-fill</button>
-    </form>
+            <button type="submit" aria-label="Calculate planetary hours">Calculate</button>
+            <button type="button" onclick="resetFields()" aria-label="Reset all fields">Reset</button>
+            <button type="button" onclick="autoFillCurrent()" aria-label="Auto-fill current date and time">Auto-fill</button>
+        </form>
 
-    <!-- Results -->
-    <div id="results"></div>
+        <!-- Results -->
+        <div id="results" aria-live="polite"></div>
 
-    <!-- Chart for planetary hours -->
-    <canvas id="planetaryChart" width="400" height="400"></canvas>
+        <!-- Interactive Chart for planetary hours -->
+        <div class="chart-container">
+            <canvas id="planetaryChart" width="400" height="400"></canvas>
+        </div>
 
-    <!-- Search Filter for Results -->
-    <label for="search" id="searchLabel">Search Results</label>
-    <input type="text" id="search" oninput="filterResults()" placeholder="Search by planet or time">
+        <!-- Search Filter for Results -->
+        <label for="search" id="searchLabel">Search Results</label>
+        <input type="text" id="search" oninput="filterResults()" placeholder="Search by planet or time">
 
-    <!-- Export Button -->
-    <button id="exportBtn" onclick="exportToCSV()">Export to CSV</button>
+        <!-- Export Button -->
+        <button id="exportBtn" onclick="exportToCSV()">Export to CSV</button>
+        <button id="exportPDFBtn" onclick="exportToPDF()">Export to PDF</button>
 
-    <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <!-- Educational Info -->
+        <section id="infoSection">
+            <h2>About Planetary Hours</h2>
+            <p>Planetary hours are based on the ancient Chaldean order of planets, each ruling specific hours of the day...</p>
+        </section>
+
+        <script src="script.js"></script>
+    </div>
 </body>
 </html>
