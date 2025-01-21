@@ -1,14 +1,19 @@
 /* Base Styles */
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     padding: 20px;
     background-color: #fff;
     color: #333;
     transition: background-color 0.3s, color 0.3s;
 }
 
-h1 {
-    font-size: 2em;
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1, h2 {
     text-align: center;
 }
 
@@ -25,7 +30,8 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 5px 0;
+    transition: background-color 0.3s;
 }
 
 button:hover {
@@ -33,16 +39,17 @@ button:hover {
 }
 
 button#themeToggle {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-input[type="text"], input[type="date"], input[type="time"], select {
+input[type="text"], input[type="time"], select {
     display: block;
     width: 100%;
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 16px;
 }
 
 input[type="checkbox"] {
@@ -59,6 +66,8 @@ input[type="checkbox"] {
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    overflow-y: auto;
+    max-height: 500px;
 }
 
 /* Spinner styles */
@@ -69,6 +78,7 @@ input[type="checkbox"] {
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
+    display: inline-block;
 }
 
 @keyframes spin {
@@ -79,28 +89,81 @@ input[type="checkbox"] {
 /* Tooltip styles */
 .tooltip {
     position: relative;
-    cursor: pointer;
+    cursor: help;
     color: #007bff;
 }
 
-.tooltip-text {
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
     position: absolute;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 3px;
-    font-size: 12px;
-    color: #333;
-    display: none;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .tooltip:hover .tooltip-text {
-    display: block;
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Chart styles */
+.chart-container {
+    position: relative;
+    margin: 20px auto;
+}
+
 canvas {
     display: block;
-    margin-top: 30px;
     max-width: 100%;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    body {
+        background-color: #000;
+        color: #fff;
+    }
+    button {
+        background-color: #fff;
+        color: #000;
+    }
+    button:hover {
+        background-color: #ccc;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 0 10px;
+    }
+    h1, h2 {
+        font-size: 1.5em;
+    }
+    input, select, button {
+        font-size: 14px;
+    }
+}
+
+/* Planet color indicators */
+.planet {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
 }
